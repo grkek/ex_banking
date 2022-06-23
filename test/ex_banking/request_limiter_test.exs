@@ -23,8 +23,9 @@ defmodule ExBanking.RequestLimiterTest do
   test "Rate limit an user" do
     ExBanking.create_user("limitlessUser")
 
-    1..800
-    |> Enum.each(fn _ -> spawn(fn -> ExBanking.deposit("limitlessUser", 1.0, "USD") end) end)
+    Enum.each(1..100, fn _ ->
+      spawn(fn -> ExBanking.deposit("limitlessUser", 100.0, "USD") end)
+    end)
 
     assert {:error, :too_many_requests_to_user} == ExBanking.get_balance("limitlessUser", "USD")
   end

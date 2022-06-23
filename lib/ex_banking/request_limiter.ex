@@ -18,10 +18,10 @@ defmodule ExBanking.RequestLimiter do
     {:ok, %{}}
   end
 
-  def start_link(_opts), do: __MODULE__ |> GenServer.start_link([], name: RequestLimiter)
+  def start_link(_opts), do: GenServer.start_link(__MODULE__, [], name: RequestLimiter)
 
-  def track(user), do: RequestLimiter |> GenServer.call({:track, user, 1})
-  def release(user), do: RequestLimiter |> GenServer.call({:track, user, -1})
+  def track(user), do: GenServer.call(RequestLimiter, {:track, user, 1})
+  def release(user), do: GenServer.call(RequestLimiter, {:track, user, -1})
 
   @impl true
   def handle_call({:track, user, increment}, _from, state) do
